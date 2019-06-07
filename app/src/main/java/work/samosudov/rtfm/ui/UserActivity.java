@@ -23,6 +23,8 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -37,11 +39,12 @@ public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = UserActivity.class.getSimpleName();
 
-    private TextView mUserName;
-
-    private EditText mUserNameInput;
-
-    private Button mUpdateButton;
+    @BindView(R.id.user_name)
+    private TextView user_name;
+    @BindView(R.id.user_name_input)
+    private EditText user_name_input;
+    @BindView(R.id.update_user)
+    private Button update_user;
 
     private ViewModelFactory mViewModelFactory;
 
@@ -54,13 +57,9 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        mUserName = findViewById(R.id.user_name);
-        mUserNameInput = findViewById(R.id.user_name_input);
-        mUpdateButton = findViewById(R.id.update_user);
-
         mViewModelFactory = Injection.provideViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
-        mUpdateButton.setOnClickListener(v -> updateUserName());
+        update_user.setOnClickListener(v -> updateUserName());
     }
 
     @Override
@@ -72,7 +71,7 @@ public class UserActivity extends AppCompatActivity {
         mDisposable.add(mViewModel.getUserName()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userName -> mUserName.setText(userName),
+                .subscribe(userName -> user_name.setText(userName),
                         throwable -> Log.e(TAG, "Unable to update username", throwable)));
     }
 
@@ -85,15 +84,15 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void updateUserName() {
-        String userName = mUserNameInput.getText().toString();
+        String userName = user_name_input.getText().toString();
         // Disable the update button until the user name update has been done
-        mUpdateButton.setEnabled(false);
+        update_user.setEnabled(false);
         // Subscribe to updating the user name.
         // Re-enable the button once the user name has been updated
         mDisposable.add(mViewModel.updateUserName(userName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> mUpdateButton.setEnabled(true),
+                .subscribe(() -> update_user.setEnabled(true),
                         throwable -> Log.e(TAG, "Unable to update username", throwable)));
     }
 }
