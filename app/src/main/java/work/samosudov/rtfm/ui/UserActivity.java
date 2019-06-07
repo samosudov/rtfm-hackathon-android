@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -39,12 +40,9 @@ public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = UserActivity.class.getSimpleName();
 
-    @BindView(R.id.user_name)
-    private TextView user_name;
-    @BindView(R.id.user_name_input)
-    private EditText user_name_input;
-    @BindView(R.id.update_user)
-    private Button update_user;
+    @BindView(R.id.user_name) TextView user_name;
+    @BindView(R.id.user_name_input) EditText user_name_input;
+    @BindView(R.id.update_user) Button update_user;
 
     private ViewModelFactory mViewModelFactory;
 
@@ -56,6 +54,7 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        ButterKnife.bind(this);
 
         mViewModelFactory = Injection.provideViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
