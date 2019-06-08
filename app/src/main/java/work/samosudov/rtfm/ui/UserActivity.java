@@ -23,7 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
+
 import android.widget.Button;
 
 import butterknife.BindView;
@@ -46,10 +46,8 @@ public class UserActivity extends AppCompatActivity {
     private static final String TAG = UserActivity.class.getSimpleName();
     private static final int QR_CODE_REQUEST_ADDR = 1;
 
-//    @BindView(R.id.user_name) TextView user_name;
-//    @BindView(R.id.user_name_input) EditText user_name_input;
-    @BindView(R.id.scan_qr) Button scan_qr;
-    @BindView(R.id.set_user) Button set_user;
+    @BindView(R.id.start_work) Button start_work;
+    @BindView(R.id.end_work) Button end_work;
 
     private ViewModelFactory mViewModelFactory;
 
@@ -65,8 +63,8 @@ public class UserActivity extends AppCompatActivity {
 
         mViewModelFactory = Injection.provideViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
-        scan_qr.setOnClickListener(v -> startScanQr());
-        set_user.setOnClickListener(v -> setUser());
+        start_work.setOnClickListener(v -> startSession());
+        end_work.setOnClickListener(v -> setUser());
     }
 
     @Override
@@ -83,7 +81,7 @@ public class UserActivity extends AppCompatActivity {
 
     }
 
-    private void startScanQr() {
+    private void startSession() {
         Intent intent = new Intent(this, DecoderActivity.class);
         startActivityForResult(intent, QR_CODE_REQUEST_ADDR);
     }

@@ -3,4 +3,6 @@
 
     <string name="scan_qr">Scan QR</string>
     <string name="set_user">Set User</string>
+    <string name="startWork">Начать</string>
+    <string name="endWork">Закончить</string>
 </resources>
