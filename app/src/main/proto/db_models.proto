@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+message Passenger {
+    int64 client_id = 1;
+    bool is_validated = 3;
+    double balance = 4;
+    int64 fid_card = 5;
+    uint32 register_date = 6;
+
+}
+
+
+message Transport
+{
+    int64 tr_id = 1;
+}
+
+
+message Trace{
+    double cost = 1;
+    int64 trace_id = 2;
+}
+
+
+message Driver{
+    int64 driver_id = 3;
+}
+
+
+message Transaction{
+    int64 client_id = 1; 
+    int64 session_id = 2; 
+    double value = 3; 
+    uint32 time = 4;
+}
+
+
+message Session{
+    int64 session_id = 1;
+    int64 driver_id = 2;
+    int64 transport_id = 3;
+    uint32 start_time = 4;
+    uint32 end_time = 5; 
+    bool is_continues =  6;
+    int64 trace_id = 7;
+}
