@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -51,6 +52,7 @@ dependencies {
     implementation deps.support.app_compat
     implementation deps.support.v4
     implementation deps.support.design
+    implementation 'com.android.support:multidex:1.0.3'
     // Architecture components
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
@@ -79,6 +81,8 @@ dependencies {
 
     implementation deps.butterknife.core
     annotationProcessor deps.butterknife.compiler
+
+    implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
 
     implementation deps.timber
     implementation deps.transitionseverywhere

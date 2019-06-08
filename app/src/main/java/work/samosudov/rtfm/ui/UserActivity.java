@@ -16,7 +16,11 @@
 
 package work.samosudov.rtfm.ui;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
@@ -29,8 +33,11 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
+
+import static work.samosudov.rtfm.ui.DecoderActivity.QR_CODE_RESULT;
 
 
 /**
@@ -39,10 +46,11 @@ import work.samosudov.rtfm.R;
 public class UserActivity extends AppCompatActivity {
 
     private static final String TAG = UserActivity.class.getSimpleName();
+    private static final int QR_CODE_REQUEST_ADDR = 1;
 
-    @BindView(R.id.user_name) TextView user_name;
-    @BindView(R.id.user_name_input) EditText user_name_input;
-    @BindView(R.id.update_user) Button update_user;
+//    @BindView(R.id.user_name) TextView user_name;
+//    @BindView(R.id.user_name_input) EditText user_name_input;
+//    @BindView(R.id.update_user) Button update_user;
 
     private ViewModelFactory mViewModelFactory;
 
@@ -58,7 +66,9 @@ public class UserActivity extends AppCompatActivity {
 
         mViewModelFactory = Injection.provideViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
-        update_user.setOnClickListener(v -> updateUserName());
+//        update_user.setOnClickListener(v -> updateUserName());
+
+
     }
 
     @Override
@@ -67,11 +77,30 @@ public class UserActivity extends AppCompatActivity {
         // Subscribe to the emissions of the user name from the view model.
         // Update the user name text view, at every onNext emission.
         // In case of error, log the exception.
-        mDisposable.add(mViewModel.getUserName()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userName -> user_name.setText(userName),
-                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
+//        mDisposable.add(mViewModel.getUserName()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(userName -> user_name.setText(userName),
+//                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
+
+        startScanQr();
+    }
+
+    private void startScanQr() {
+        Intent intent = new Intent(this, DecoderActivity.class);
+        startActivityForResult(intent, QR_CODE_REQUEST_ADDR);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) return;
+
+        String result = data.getStringExtra(QR_CODE_RESULT);
+        if (result.isEmpty()) return;
+
+        Timber.d("onActivityResult res=%s", result);
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -82,16 +111,23 @@ public class UserActivity extends AppCompatActivity {
         mDisposable.clear();
     }
 
+    public void commitFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit();
+    }
+
     private void updateUserName() {
-        String userName = user_name_input.getText().toString();
-        // Disable the update button until the user name update has been done
-        update_user.setEnabled(false);
+//        String userName = user_name_input.getText().toString();
+//        // Disable the update button until the user name update has been done
+//        update_user.setEnabled(false);
         // Subscribe to updating the user name.
         // Re-enable the button once the user name has been updated
-        mDisposable.add(mViewModel.updateUserName(userName)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> update_user.setEnabled(true),
-                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
+//        mDisposable.add(mViewModel.updateUserName(userName)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(() -> update_user.setEnabled(true),
+//                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
     }
 }
