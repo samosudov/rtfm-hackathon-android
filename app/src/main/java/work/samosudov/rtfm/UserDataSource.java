@@ -19,6 +19,7 @@ package work.samosudov.rtfm;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import work.samosudov.rtfm.persistence.User;
 
 /**
@@ -40,7 +41,7 @@ public interface UserDataSource {
      */
     Completable insertOrUpdateUser(User user);
 
-    Flowable<User> checkTransactions(String stringId);
+    Flowable<Integer> checkTransactions(String stringId);
 
     /**
      * Deletes all users from the data source.

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import work.samosudov.rtfm.UserDataSource;
+import work.samosudov.rtfm.ui.main.UserViewModel;
 
 /**
  * Factory for ViewModels

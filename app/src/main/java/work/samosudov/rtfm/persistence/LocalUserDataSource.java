@@ -19,6 +19,7 @@ package work.samosudov.rtfm.persistence;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import work.samosudov.rtfm.UserDataSource;
 
 /**
@@ -43,7 +44,7 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Flowable<User> checkTransactions(String stringId) {
+    public Flowable<Integer> checkTransactions(String stringId) {
         return mUserDao.checkTransaction(stringId);
     }
 

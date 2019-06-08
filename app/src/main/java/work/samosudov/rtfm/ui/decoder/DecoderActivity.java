@@ -1,8 +1,6 @@
-package work.samosudov.rtfm.ui;
+package work.samosudov.rtfm.ui.decoder;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -13,6 +11,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView.OnQRCodeReadListener;
@@ -20,7 +20,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
+import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
+import work.samosudov.rtfm.ui.main.UserViewModel;
+import work.samosudov.rtfm.ui.ViewModelFactory;
 
 /**
  * Created by samosudovd on 11/07/2018.
@@ -34,14 +41,24 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     @BindView(R.id.main_layout)
     ViewGroup main_layout;
 
+    private ViewModelFactory mViewModelFactory;
+    private UserViewModel mViewModel;
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
+    public static final int SUCCESS_RESULT = 0;
+    public static final int WRONG_RESULT = 1;
     public static final String QR_CODE_RESULT = "QR_CODE_RESULT";
+    public static final String CHECK_RESULT = "CHECK_RESULT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decoder);
         ButterKnife.bind(this);
+
+        mViewModelFactory = Injection.provideViewModelFactory(this);
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -72,10 +89,12 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     // "points" : points where QR control points are placed in View
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra(QR_CODE_RESULT, text);
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+//        Intent returnIntent = new Intent();
+//        returnIntent.putExtra(QR_CODE_RESULT, text);
+//        setResult(Activity.RESULT_OK, returnIntent);
+//        finish();
+
+        checkTransaction(text);
     }
 
     @Override
@@ -92,6 +111,42 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
         if (qrdecoderview != null) {
             qrdecoderview.stopCamera();
         }
+    }
+
+    private void checkTransaction(String result) {
+//        String userName = user_name_input.getText().toString();
+//        // Disable the update button until the user name update has been done
+//        scan_qr.setEnabled(false);
+        // Subscribe to updating the user name.
+        // Re-enable the button once the user name has been updated
+        mDisposable.add(mViewModel.checkTransaction(result)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((name) -> {
+                    Timber.d("checkTransaction username=%s", name);
+                    if (name != 0) {
+                        showSuccess();
+                    } else {
+                        showWrong();
+                    }
+                }));
+    }
+
+    private void showSuccess() {
+        showFragment(SUCCESS_RESULT);
+    }
+
+    private void showWrong() {
+        showFragment(WRONG_RESULT);
+    }
+
+    private void showFragment(int result) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Bundle b = new Bundle();
+        b.putInt(CHECK_RESULT, result);
+        ScanResultFragment sqf = new ScanResultFragment();
+        sqf.setArguments(b);
+        sqf.show(fragmentManager, "ScanResultFragment");
     }
 
     private void initQRCodeReaderView() {

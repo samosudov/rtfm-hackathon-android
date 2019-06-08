@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.ui;
+package work.samosudov.rtfm.ui.main;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -34,8 +34,10 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
+import work.samosudov.rtfm.ui.ViewModelFactory;
+import work.samosudov.rtfm.ui.decoder.DecoderActivity;
 
-import static work.samosudov.rtfm.ui.DecoderActivity.QR_CODE_RESULT;
+import static work.samosudov.rtfm.ui.decoder.DecoderActivity.QR_CODE_RESULT;
 
 
 /**
@@ -101,7 +103,6 @@ public class UserActivity extends AppCompatActivity {
         if (result.isEmpty()) return;
 
         Timber.d("onActivityResult res=%s", result);
-        checkTransaction(result);
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -119,17 +120,5 @@ public class UserActivity extends AppCompatActivity {
 //                .beginTransaction()
 //                .replace(R.id.frameLayout, fragment)
 //                .commit();
-    }
-
-    private void checkTransaction(String result) {
-//        String userName = user_name_input.getText().toString();
-//        // Disable the update button until the user name update has been done
-//        scan_qr.setEnabled(false);
-        // Subscribe to updating the user name.
-        // Re-enable the button once the user name has been updated
-        mDisposable.add(mViewModel.checkTransaction(result)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((name) -> Timber.d("checkTransaction username=%s", name)));
     }
 }

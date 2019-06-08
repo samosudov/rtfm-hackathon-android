@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.ui;
+package work.samosudov.rtfm.ui.main;
 
 
 import androidx.lifecycle.ViewModel;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import timber.log.Timber;
 import work.samosudov.rtfm.UserDataSource;
 import work.samosudov.rtfm.persistence.User;
 
@@ -55,11 +56,11 @@ public class UserViewModel extends ViewModel {
         return mDataSource.insertOrUpdateUser(new User(userName));
     }
 
-    public Flowable<String> checkTransaction(final String userName) {
+    public Flowable<Integer> checkTransaction(final String userName) {
         return mDataSource.checkTransactions(userName)
                 .map(user -> {
-                    mUser = user;
-                    return user.getUserName();
+                    Timber.d("checkTransaction %b", user);
+                    return user;
                 });
     }
 }

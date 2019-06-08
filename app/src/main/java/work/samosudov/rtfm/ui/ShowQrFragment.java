@@ -59,7 +59,7 @@ public class ShowQrFragment extends DialogFragment {
 //    @Nullable
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_show_qr, container, false);
+//        return inflater.inflate(R.layout.fragment_scan_result, container, false);
 //    }
 //
 //    @Override

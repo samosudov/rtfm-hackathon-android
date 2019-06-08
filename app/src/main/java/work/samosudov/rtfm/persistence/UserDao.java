@@ -22,6 +22,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 /**
  * Data Access Object for the users table.
@@ -46,8 +47,8 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertUser(User user);
 
-    @Query("SELECT * FROM Users where userid is :strId")
-    Flowable<User> checkTransaction(String strId);
+    @Query("SELECT COUNT(userid) FROM Users where userid is :strId")
+    Flowable<Integer> checkTransaction(String strId);
 
     /**
      * Delete all users.
