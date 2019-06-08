@@ -16,10 +16,8 @@
 
 package work.samosudov.rtfm.ui.main;
 
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,10 +32,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
-import work.samosudov.rtfm.ui.ViewModelFactory;
 import work.samosudov.rtfm.ui.decoder.DecoderActivity;
-
-import static work.samosudov.rtfm.ui.decoder.DecoderActivity.QR_CODE_RESULT;
 
 
 /**
@@ -51,7 +46,7 @@ public class UserActivity extends AppCompatActivity {
     @BindView(R.id.start_work) Button start_work;
     @BindView(R.id.end_work) Button end_work;
 
-    private ViewModelFactory mViewModelFactory;
+    private UserViewModelFactory mUserViewModelFactory;
 
     private UserViewModel mViewModel;
 
@@ -63,8 +58,8 @@ public class UserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
 
-        mViewModelFactory = Injection.provideViewModelFactory(this);
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        mUserViewModelFactory = Injection.provideViewModelFactory(this);
+        mViewModel = ViewModelProviders.of(this, mUserViewModelFactory).get(UserViewModel.class);
         start_work.setOnClickListener(v -> startSession());
         end_work.setOnClickListener(v -> setUser());
     }
@@ -89,22 +84,11 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void setUser() {
-        mDisposable.add(mViewModel.insert("namenew")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> Timber.d("setUser completed")));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) return;
-
-        String result = data.getStringExtra(QR_CODE_RESULT);
-        if (result.isEmpty()) return;
-
-        Timber.d("onActivityResult res=%s", result);
-
-        super.onActivityResult(requestCode, resultCode, data);
+//        mDisposable.add(mViewModel.insert("namenew")
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(() -> Timber.d("setUser completed")));
+        mViewModel.checkProto();
     }
 
     @Override
@@ -115,10 +99,4 @@ public class UserActivity extends AppCompatActivity {
         mDisposable.clear();
     }
 
-    public void commitFragment(Fragment fragment) {
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.frameLayout, fragment)
-//                .commit();
-    }
 }

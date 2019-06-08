@@ -14,42 +14,37 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.persistence;
+package work.samosudov.rtfm.persistence.txs;
 
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import work.samosudov.rtfm.UserDataSource;
 
 /**
  * Using the Room database as a data source.
  */
-public class LocalUserDataSource implements UserDataSource {
+public class LocalTxsDataSource {
 
-    private final UserDao mUserDao;
+    private final TxDao mTxDao;
 
-    public LocalUserDataSource(UserDao userDao) {
-        mUserDao = userDao;
+    public LocalTxsDataSource(TxDao txDao) {
+        mTxDao = txDao;
     }
 
-    @Override
-    public Flowable<User> getUser() {
-        return mUserDao.getUser();
+    public Flowable<Tx> getTx() {
+        return mTxDao.getTx();
     }
 
-    @Override
-    public Completable insertOrUpdateUser(User user) {
-       return mUserDao.insertUser(user);
+    public Completable insertOrUpdateUser(Tx tx) {
+       return mTxDao.insertTx(tx);
     }
 
-    @Override
     public Flowable<Integer> checkTransactions(String stringId) {
-        return mUserDao.checkTransaction(stringId);
+        return mTxDao.checkTransaction(stringId);
     }
 
-    @Override
     public void deleteAllUsers() {
-        mUserDao.deleteAllUsers();
+        mTxDao.deleteAllTxs();
     }
+
 }

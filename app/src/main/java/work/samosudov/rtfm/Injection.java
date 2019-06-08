@@ -18,9 +18,11 @@ package work.samosudov.rtfm;
 
 import android.content.Context;
 
-import work.samosudov.rtfm.persistence.LocalUserDataSource;
-import work.samosudov.rtfm.persistence.UsersDatabase;
-import work.samosudov.rtfm.ui.ViewModelFactory;
+import work.samosudov.rtfm.persistence.AppDatabase;
+import work.samosudov.rtfm.persistence.main.LocalUserDataSource;
+import work.samosudov.rtfm.persistence.txs.LocalTxsDataSource;
+import work.samosudov.rtfm.ui.decoder.DecoderViewModelFactory;
+import work.samosudov.rtfm.ui.main.UserViewModelFactory;
 
 /**
  * Enables injection of data sources.
@@ -28,12 +30,22 @@ import work.samosudov.rtfm.ui.ViewModelFactory;
 public class Injection {
 
     public static UserDataSource provideUserDataSource(Context context) {
-        UsersDatabase database = UsersDatabase.getInstance(context);
+        AppDatabase database = AppDatabase.getInstance(context);
         return new LocalUserDataSource(database.userDao());
     }
 
-    public static ViewModelFactory provideViewModelFactory(Context context) {
+    public static UserViewModelFactory provideViewModelFactory(Context context) {
         UserDataSource dataSource = provideUserDataSource(context);
-        return new ViewModelFactory(dataSource);
+        return new UserViewModelFactory(dataSource);
+    }
+
+    public static LocalTxsDataSource provideTxsDataSource(Context context) {
+        AppDatabase database = AppDatabase.getInstance(context);
+        return new LocalTxsDataSource(database.txDao());
+    }
+
+    public static DecoderViewModelFactory provideTxsViewModelFactory(Context context) {
+        LocalTxsDataSource dataSource = provideTxsDataSource(context);
+        return new DecoderViewModelFactory(dataSource);
     }
 }

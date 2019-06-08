@@ -21,22 +21,31 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
+import work.samosudov.rtfm.persistence.main.User;
+import work.samosudov.rtfm.persistence.main.UserDao;
+import work.samosudov.rtfm.persistence.txs.Tx;
+import work.samosudov.rtfm.persistence.txs.TxDao;
+
 /**
  * The Room database that contains the Users table
  */
-@Database(entities = {User.class}, version = 1)
-public abstract class UsersDatabase extends RoomDatabase {
+@Database(entities = {
+        User.class,
+        Tx.class
+}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
 
-    private static volatile UsersDatabase INSTANCE;
+    private static volatile AppDatabase INSTANCE;
 
     public abstract UserDao userDao();
+    public abstract TxDao txDao();
 
-    public static UsersDatabase getInstance(Context context) {
+    public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            synchronized (UsersDatabase.class) {
+            synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            UsersDatabase.class, "Sample.db")
+                            AppDatabase.class, "Sample.db")
                             .build();
                 }
             }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.ui;
+package work.samosudov.rtfm.ui.main;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,11 +25,11 @@ import work.samosudov.rtfm.ui.main.UserViewModel;
 /**
  * Factory for ViewModels
  */
-public class ViewModelFactory implements ViewModelProvider.Factory {
+public class UserViewModelFactory implements ViewModelProvider.Factory {
 
     private final UserDataSource mDataSource;
 
-    public ViewModelFactory(UserDataSource dataSource) {
+    public UserViewModelFactory(UserDataSource dataSource) {
         mDataSource = dataSource;
     }
 

@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.persistence;
+package work.samosudov.rtfm.persistence.txs;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 /**
  * Data Access Object for the users table.
  */
 @Dao
-public interface UserDao {
+public interface TxDao {
 
     /**
      * Get the user from the table. Since for simplicity we only have one user in the database,
@@ -36,23 +36,23 @@ public interface UserDao {
      *
      * @return the user from the table
      */
-    @Query("SELECT * FROM Users LIMIT 1")
-    Flowable<User> getUser();
+    @Query("SELECT * FROM tx LIMIT 1")
+    Flowable<Tx> getTx();
 
     /**
-     * Insert a user in the database. If the user already exists, replace it.
+     * Insert a tx in the database. If the tx already exists, replace it.
      *
-     * @param user the user to be inserted.
+     * @param tx the tx to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insertUser(User user);
+    Completable insertTx(Tx tx);
 
-    @Query("SELECT COUNT(userid) FROM Users where userid is :strId")
+    @Query("SELECT COUNT(id) FROM tx where id is :strId")
     Flowable<Integer> checkTransaction(String strId);
 
     /**
      * Delete all users.
      */
-    @Query("DELETE FROM Users")
-    void deleteAllUsers();
+    @Query("DELETE FROM Tx")
+    void deleteAllTxs();
 }

@@ -14,45 +14,60 @@
  * limitations under the License.
  */
 
-package work.samosudov.rtfm.persistence;
+package work.samosudov.rtfm.persistence.txs;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
+
 import java.util.UUID;
 
 /**
- * Immutable model class for a User
+ * Immutable model class for a Tx
  */
-@Entity(tableName = "users")
-public class User {
+@Entity(tableName = "tx")
+public class Tx {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "userid")
-    private String mId;
+    @ColumnInfo(name = "id")
+    private String id;
 
-    @ColumnInfo(name = "username")
-    private String mUserName;
+    @ColumnInfo(name = "value")
+    private Double value;
+
+    @ColumnInfo(name = "time")
+    private Long time;
 
     @Ignore
-    public User(String userName) {
-        mId = UUID.randomUUID().toString();
-        mUserName = userName;
+    public Tx(Double value, Long time) {
+        id = UUID.randomUUID().toString();
+        this.value = value;
+        this.time = time;
     }
 
-    public User(String id, String userName) {
-        this.mId = id;
-        this.mUserName = userName;
+    public Tx(@NonNull String id, Double value, Long time) {
+        this.id = id;
+        this.value = value;
+        this.time = time;
     }
 
+    public static Tx parseTx(String str) {
+        return new Tx(str, 0.0, System.currentTimeMillis());
+    }
+
+    @NonNull
     public String getId() {
-        return mId;
+        return id;
     }
 
-    public String getUserName() {
-        return mUserName;
+    public Double getValue() {
+        return value;
+    }
+
+    public Long getTime() {
+        return time;
     }
 }

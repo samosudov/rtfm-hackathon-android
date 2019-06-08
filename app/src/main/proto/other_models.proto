@@ -1,0 +1,33 @@
+syntax = "proto3";
+import "db_models.proto";
+
+
+
+message ClientValidationList{
+    map<int64, bool> Clients = 1;
+}
+
+
+message Payment{
+    int64 ClientID = 1;
+    int64 TransactionID = 2; 
+    int64 TransportID = 3;
+}
+
+
+message CompletedPayment{
+    string price = 1;
+    TransportType type = 2;
+    string title = 3; 
+    int32 date = 4;
+    int64 id = 5;
+    Status status = 6; 
+}
+
+message RecentPaymentsRequest {
+    int64 client_id = 1; 
+}
+
+message RecentPaymentsResponce{
+    repeated CompletedPayment Payments = 1;
+}

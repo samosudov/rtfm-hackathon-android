@@ -10,15 +10,32 @@ message Passenger {
 }
 
 
+enum TransportType
+{
+    Bus = 0;
+    MT = 1;
+    Taxy = 2;
+    Subway = 3;
+}
+
+
+enum Status{
+    Success = 0;
+    Failed = 1;
+
+}
+
 message Transport
 {
     int64 tr_id = 1;
+    TransportType tr_type = 2;
 }
 
 
 message Trace{
     double cost = 1;
     int64 trace_id = 2;
+    string trace_title = 3;
 }
 
 
@@ -28,14 +45,16 @@ message Driver{
 
 
 message Transaction{
-    int64 client_id = 1; 
-    int64 session_id = 2; 
-    double value = 3; 
+    int64 client_id = 1;
+    int64 session_id = 2;
+    double value = 3;
     uint32 time = 4;
+    int64 transaction_id = 5;
+    Status status = 6;
 }
 
 
-message Session{
+message DriveSession{
     int64 session_id = 1;
     int64 driver_id = 2;
     int64 transport_id = 3;

@@ -26,8 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
-import work.samosudov.rtfm.ui.main.UserViewModel;
-import work.samosudov.rtfm.ui.ViewModelFactory;
+import work.samosudov.rtfm.persistence.txs.Tx;
 
 /**
  * Created by samosudovd on 11/07/2018.
@@ -41,9 +40,10 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     @BindView(R.id.main_layout)
     ViewGroup main_layout;
 
-    private ViewModelFactory mViewModelFactory;
-    private UserViewModel mViewModel;
+    private DecoderViewModelFactory mUserViewModelFactory;
+    private DecoderViewModel mViewModel;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private Tx tx;
 
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
     public static final int SUCCESS_RESULT = 0;
@@ -57,8 +57,8 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
         setContentView(R.layout.activity_decoder);
         ButterKnife.bind(this);
 
-        mViewModelFactory = Injection.provideViewModelFactory(this);
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
+        mUserViewModelFactory = Injection.provideTxsViewModelFactory(this);
+        mViewModel = ViewModelProviders.of(this, mUserViewModelFactory).get(DecoderViewModel.class);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -94,7 +94,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
 //        setResult(Activity.RESULT_OK, returnIntent);
 //        finish();
 
-        checkTransaction(text);
+        parseTransaction(text);
     }
 
     @Override
@@ -113,6 +113,11 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
         }
     }
 
+    private void parseTransaction(String text) {
+        tx = Tx.parseTx(text);
+        checkTransaction(tx.getId());
+    }
+
     private void checkTransaction(String result) {
 //        String userName = user_name_input.getText().toString();
 //        // Disable the update button until the user name update has been done
@@ -125,19 +130,25 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
                 .subscribe((name) -> {
                     Timber.d("checkTransaction username=%s", name);
                     if (name != 0) {
-                        showSuccess();
+                        showSuccessPushSave();
                     } else {
-                        showWrong();
+                        showWrongPushSave();
                     }
                 }));
     }
 
-    private void showSuccess() {
+    private void showSuccessPushSave() {
         showFragment(SUCCESS_RESULT);
+        pushToServerOrSave();
     }
 
-    private void showWrong() {
+    private void showWrongPushSave() {
         showFragment(WRONG_RESULT);
+        pushToServerOrSave();
+    }
+
+    private void pushToServerOrSave() {
+        mViewModel.transaction(tx);
     }
 
     private void showFragment(int result) {

@@ -19,8 +19,7 @@ package work.samosudov.rtfm;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import work.samosudov.rtfm.persistence.User;
+import work.samosudov.rtfm.persistence.main.User;
 
 /**
  * Access point for managing user data.
