@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 28
@@ -22,6 +23,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    protobuf {
+        protoc { artifact = 'com.google.protobuf:protoc:3.6.1' }
+        plugins {
+            javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+            grpc {
+                artifact = 'io.grpc:protoc-gen-grpc-java:1.18.0'
+            }
+        }
+        generateProtoTasks {
+            all().each { task ->
+                task.plugins {
+                    javalite {}
+                    grpc { // Options added to --grpc_out
+                        option 'lite'
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 dependencies {
@@ -50,6 +72,9 @@ dependencies {
     implementation deps.okhttp_logging_interceptor
     implementation deps.glide.runtime
 
+    implementation deps.grpc.okhttp
+    implementation deps.grpc.lite
+    implementation deps.grpc.stub
 
     implementation deps.butterknife.core
     annotationProcessor deps.butterknife.compiler
