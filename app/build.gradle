@@ -75,10 +75,12 @@ dependencies {
     implementation deps.grpc.okhttp
     implementation deps.grpc.lite
     implementation deps.grpc.stub
+    implementation deps.javax
 
     implementation deps.butterknife.core
     annotationProcessor deps.butterknife.compiler
 
+    implementation deps.timber
     implementation deps.transitionseverywhere
 
 }
