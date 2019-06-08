@@ -43,6 +43,11 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
+    public Flowable<User> checkTransactions(String stringId) {
+        return mUserDao.checkTransaction(stringId);
+    }
+
+    @Override
     public void deleteAllUsers() {
         mUserDao.deleteAllUsers();
     }

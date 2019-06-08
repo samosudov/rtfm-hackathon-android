@@ -103,7 +103,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
         qrdecoderview = content.findViewById(R.id.qrdecoderview);
         qrdecoderview.setAutofocusInterval(2000L);
         qrdecoderview.setOnQRCodeReadListener(this);
-        qrdecoderview.setBackCamera();
+        qrdecoderview.setFrontCamera();
         qrdecoderview.startCamera();
     }
 

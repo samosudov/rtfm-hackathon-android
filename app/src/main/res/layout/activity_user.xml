@@ -7,9 +7,16 @@
     android:orientation="vertical"
     tools:context=".ui.UserActivity">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <Button
+        android:id="@+id/scan_qr"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:text="@string/scan_qr"/>
+
+    <Button
+        android:id="@+id/set_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/set_user"/>
 
 </LinearLayout>

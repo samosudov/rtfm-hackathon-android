@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">RtfmAndroid</string>
-    <string name="update_user">Update username</string>
+
+    <string name="scan_qr">Scan QR</string>
+    <string name="set_user">Set User</string>
 </resources>

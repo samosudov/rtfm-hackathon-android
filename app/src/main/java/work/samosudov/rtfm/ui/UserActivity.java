@@ -25,8 +25,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +48,8 @@ public class UserActivity extends AppCompatActivity {
 
 //    @BindView(R.id.user_name) TextView user_name;
 //    @BindView(R.id.user_name_input) EditText user_name_input;
-//    @BindView(R.id.update_user) Button update_user;
+    @BindView(R.id.scan_qr) Button scan_qr;
+    @BindView(R.id.set_user) Button set_user;
 
     private ViewModelFactory mViewModelFactory;
 
@@ -66,9 +65,8 @@ public class UserActivity extends AppCompatActivity {
 
         mViewModelFactory = Injection.provideViewModelFactory(this);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(UserViewModel.class);
-//        update_user.setOnClickListener(v -> updateUserName());
-
-
+        scan_qr.setOnClickListener(v -> startScanQr());
+        set_user.setOnClickListener(v -> setUser());
     }
 
     @Override
@@ -83,12 +81,18 @@ public class UserActivity extends AppCompatActivity {
 //                .subscribe(userName -> user_name.setText(userName),
 //                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
 
-        startScanQr();
     }
 
     private void startScanQr() {
         Intent intent = new Intent(this, DecoderActivity.class);
         startActivityForResult(intent, QR_CODE_REQUEST_ADDR);
+    }
+
+    private void setUser() {
+        mDisposable.add(mViewModel.insert("namenew")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> Timber.d("setUser completed")));
     }
 
     @Override
@@ -99,6 +103,7 @@ public class UserActivity extends AppCompatActivity {
         if (result.isEmpty()) return;
 
         Timber.d("onActivityResult res=%s", result);
+        checkTransaction(result);
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -112,22 +117,21 @@ public class UserActivity extends AppCompatActivity {
     }
 
     public void commitFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frameLayout, fragment)
-                .commit();
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.frameLayout, fragment)
+//                .commit();
     }
 
-    private void updateUserName() {
+    private void checkTransaction(String result) {
 //        String userName = user_name_input.getText().toString();
 //        // Disable the update button until the user name update has been done
-//        update_user.setEnabled(false);
+//        scan_qr.setEnabled(false);
         // Subscribe to updating the user name.
         // Re-enable the button once the user name has been updated
-//        mDisposable.add(mViewModel.updateUserName(userName)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(() -> update_user.setEnabled(true),
-//                        throwable -> Log.e(TAG, "Unable to update username", throwable)));
+        mDisposable.add(mViewModel.checkTransaction(result)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((name) -> Timber.d("checkTransaction username=%s", name)));
     }
 }

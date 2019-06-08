@@ -46,6 +46,9 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertUser(User user);
 
+    @Query("SELECT * FROM Users where userid is :strId")
+    Flowable<User> checkTransaction(String strId);
+
     /**
      * Delete all users.
      */

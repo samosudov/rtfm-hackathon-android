@@ -17,8 +17,8 @@
 package work.samosudov.rtfm.ui;
 
 
-
 import androidx.lifecycle.ViewModel;
+
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import work.samosudov.rtfm.UserDataSource;
@@ -49,22 +49,17 @@ public class UserViewModel extends ViewModel {
                     mUser = user;
                     return user.getUserName();
                 });
-
     }
 
-    /**
-     * Update the user name.
-     *
-     * @param userName the new user name
-     * @return a {@link Completable} that completes when the user name is updated
-     */
-    public Completable updateUserName(final String userName) {
-        // if there's no user, create a new user.
-        // if we already have a user, then, since the user object is immutable,
-        // create a new user, with the id of the previous user and the updated user name.
-        mUser = mUser == null
-                ? new User(userName)
-                : new User(mUser.getId(), userName);
-        return mDataSource.insertOrUpdateUser(mUser);
+    public Completable insert(final String userName) {
+        return mDataSource.insertOrUpdateUser(new User(userName));
+    }
+
+    public Flowable<String> checkTransaction(final String userName) {
+        return mDataSource.checkTransactions(userName)
+                .map(user -> {
+                    mUser = user;
+                    return user.getUserName();
+                });
     }
 }
