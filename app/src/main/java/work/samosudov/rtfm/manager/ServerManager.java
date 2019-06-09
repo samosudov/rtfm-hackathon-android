@@ -20,6 +20,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import timber.log.Timber;
+import work.samosudov.rtfm.generated.DbModels;
+import work.samosudov.rtfm.generated.OtherModels;
 
 /**
  * Created by samosudovd on 08/05/2018.
@@ -46,6 +48,7 @@ public class ServerManager {
 
     //endpoints
     private final static String RECENT_PAYMENTS = "recent_payments";
+    private final static String POST_TX = "transact";
     private final static String VALID_LIST = "valid_list";
 
     //Heroku prod
@@ -85,6 +88,8 @@ public class ServerManager {
 
         @GET(VALID_LIST)
         Call<ResponseBody> validList();
+        @POST(POST_TX)
+        Call<ResponseBody> postTx(@Body OtherModels.Payment transaction);
         @GET(RECENT_PAYMENTS)
         Call<ResponseBody> estimatedObs();
 //        @POST(RECENT_PAYMENTS)

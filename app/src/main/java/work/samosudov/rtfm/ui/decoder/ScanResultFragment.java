@@ -97,16 +97,6 @@ public class ScanResultFragment extends DialogFragment {
 
     }
 
-//    public void tapCancel() {
-//        if (getActivity() != null)
-//            getActivity().getSupportFragmentManager().popBackStack();
-//    }
-
-//    @OnClick(R.id.cash)
-//    public void tapCash(View v) {
-//        setSuccess();
-//    }
-
     private void setSuccess() {
         tv_title.setText("Платеж совершен");
         tv_explain.setVisibility(View.VISIBLE);

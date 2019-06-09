@@ -28,6 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import work.samosudov.rtfm.UserDataSource;
 import work.samosudov.rtfm.manager.CallCheckProto;
+import work.samosudov.rtfm.manager.CallPostTx;
 import work.samosudov.rtfm.persistence.main.LocalUserDataSource;
 import work.samosudov.rtfm.persistence.txs.LocalTxsDataSource;
 import work.samosudov.rtfm.persistence.txs.Tx;
@@ -66,6 +67,18 @@ public class DecoderViewModel extends ViewModel {
                     Timber.d("checkTransaction %b", count);
                     return count;
                 });
+    }
+
+    public void pushTxToServer(Long clientId) {
+        mDisposable.add(Observable
+                .fromCallable(new CallPostTx(clientId))
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        (value) -> {
+                            Timber.d("completed %b", value);
+                        },
+                        e-> Timber.e("err =%s", e.getMessage())
+                ));
     }
 
     public void transaction(Tx tx) {

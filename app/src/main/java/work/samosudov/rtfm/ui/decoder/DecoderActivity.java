@@ -54,6 +54,8 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     public static final String QR_CODE_RESULT = "QR_CODE_RESULT";
     public static final String CHECK_RESULT = "CHECK_RESULT";
 
+    private Long clientId = 0L;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,11 +129,11 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
 //        scan_qr.setEnabled(false);
         // Subscribe to updating the user name.
         // Re-enable the button once the user name has been updated
-        Long clientId = 0L;
         try {
             clientId = Long.parseLong(result);
             Timber.d("checkTransaction clientId=%d", clientId);
         } catch (NumberFormatException nfe) {
+            clientId = 0L;
             Timber.e("checkTransaction parseLong=%s", nfe.getMessage());
         }
 
@@ -153,7 +155,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     private void showSuccessPushSave() {
         showFragment(SUCCESS_RESULT);
         //FIXME:
-//        pushToServerOrSave();
+        if (clientId != 0L) pushToServerOrSave();
     }
 
     private void showWrongPushSave() {
@@ -163,7 +165,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     }
 
     private void pushToServerOrSave() {
-        mViewModel.transaction(tx);
+        mViewModel.pushTxToServer(clientId);
     }
 
     private void showFragment(int result) {
