@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView.OnQRCodeReadListener;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +96,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
 //        returnIntent.putExtra(QR_CODE_RESULT, text);
 //        setResult(Activity.RESULT_OK, returnIntent);
 //        finish();
+        Timber.d("onQRCodeRead t=%s", text);
 
         parseTransaction(text);
     }
@@ -155,11 +159,25 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
 
     private void showFragment(int result) {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if (fragments != null) {
+            Timber.d("showFragment frag size=%d", fragments.size());
+            for(Fragment fragment : fragments) {
+                if(fragment != null && fragment.isVisible())
+                    if (fragment instanceof ScanResultFragment) return;
+            }
+        }
+
         Bundle b = new Bundle();
         b.putInt(CHECK_RESULT, result);
         ScanResultFragment sqf = new ScanResultFragment();
         sqf.setArguments(b);
         sqf.show(fragmentManager, "ScanResultFragment");
+
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.frameLayout, sqf)
+//                .commit();
     }
 
     private void initQRCodeReaderView() {

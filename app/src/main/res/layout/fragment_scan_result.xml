@@ -22,15 +22,40 @@
     <ImageView
         android:id="@+id/iv_show_qr"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_width="match_parent"
-        tools:layout_height="200dp"
+        android:layout_height="300dp"
         android:padding="30dp"
         android:src="@drawable/success_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tv_explain"/>
+        app:layout_constraintBottom_toTopOf="@id/cancel"/>
+
+    <Button
+        android:id="@+id/cancel"
+        android:text="Отмена"
+        style="@style/btnStyle"
+        android:layout_width="0dp"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/btn_white"
+        android:textColor="@color/fontLight"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/cash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
+
+    <Button
+        android:id="@+id/cash"
+        android:text="Оплата наличными"
+        style="@style/btnStyle"
+        android:layout_width="0dp"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/btn_green"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="2"/>
 
     <TextView
         android:id="@+id/tv_explain"
@@ -41,6 +66,7 @@
         tools:text="Операция завершена"
         android:textColor="@color/fontLight"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
