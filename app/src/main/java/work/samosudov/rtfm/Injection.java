@@ -39,13 +39,13 @@ public class Injection {
         return new UserViewModelFactory(dataSource);
     }
 
-    public static LocalTxsDataSource provideTxsDataSource(Context context) {
+    public static LocalUserDataSource provideTxsDataSource(Context context) {
         AppDatabase database = AppDatabase.getInstance(context);
-        return new LocalTxsDataSource(database.txDao());
+        return new LocalUserDataSource(database.userDao());
     }
 
     public static DecoderViewModelFactory provideTxsViewModelFactory(Context context) {
-        LocalTxsDataSource dataSource = provideTxsDataSource(context);
+        LocalUserDataSource dataSource = provideTxsDataSource(context);
         return new DecoderViewModelFactory(dataSource);
     }
 }

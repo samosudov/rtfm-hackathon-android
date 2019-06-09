@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import work.samosudov.rtfm.UserDataSource;
+import work.samosudov.rtfm.persistence.main.LocalUserDataSource;
 import work.samosudov.rtfm.persistence.txs.LocalTxsDataSource;
 import work.samosudov.rtfm.ui.main.UserViewModel;
 
@@ -28,9 +29,9 @@ import work.samosudov.rtfm.ui.main.UserViewModel;
  */
 public class DecoderViewModelFactory implements ViewModelProvider.Factory {
 
-    private final LocalTxsDataSource mDataSource;
+    private final LocalUserDataSource mDataSource;
 
-    public DecoderViewModelFactory(LocalTxsDataSource dataSource) {
+    public DecoderViewModelFactory(LocalUserDataSource dataSource) {
         mDataSource = dataSource;
     }
 

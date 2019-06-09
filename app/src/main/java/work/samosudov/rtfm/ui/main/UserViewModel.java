@@ -27,6 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 import work.samosudov.rtfm.UserDataSource;
 import work.samosudov.rtfm.manager.CallCheckProto;
+import work.samosudov.rtfm.persistence.AppDatabase;
 import work.samosudov.rtfm.persistence.main.User;
 
 /**
@@ -54,15 +55,15 @@ public class UserViewModel extends ViewModel {
                 // for every emission of the user, get the user name
                 .map(user -> {
                     mUser = user;
-                    return user.getUserName();
+                    return user.getClientId().toString();
                 });
     }
 
-    public Completable insert(final String userName) {
+    public Completable insert(final Long userName) {
         return mDataSource.insertOrUpdateUser(new User(userName));
     }
 
-    public Flowable<Integer> checkTransaction(final String userName) {
+    public Flowable<Integer> checkTransaction(final Long userName) {
         return mDataSource.checkTransactions(userName)
                 .map(user -> {
                     Timber.d("checkTransaction %b", user);
@@ -72,7 +73,7 @@ public class UserViewModel extends ViewModel {
 
     public void checkProto() {
         mDisposable.add(Observable
-                .fromCallable(new CallCheckProto())
+                .fromCallable(new CallCheckProto(mDataSource))
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         (b) -> Timber.d("checkProto true"),

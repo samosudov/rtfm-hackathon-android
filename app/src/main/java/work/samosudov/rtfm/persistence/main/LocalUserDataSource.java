@@ -43,7 +43,7 @@ public class LocalUserDataSource implements UserDataSource {
     }
 
     @Override
-    public Flowable<Integer> checkTransactions(String stringId) {
+    public Flowable<Integer> checkTransactions(Long stringId) {
         return mUserDao.checkTransaction(stringId);
     }
 

@@ -35,7 +35,7 @@ public interface UserDao {
      *
      * @return the user from the table
      */
-    @Query("SELECT * FROM users LIMIT 1")
+    @Query("SELECT * FROM clients LIMIT 1")
     Flowable<User> getUser();
 
     /**
@@ -46,12 +46,12 @@ public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertUser(User user);
 
-    @Query("SELECT COUNT(userid) FROM users where userid is :strId")
-    Flowable<Integer> checkTransaction(String strId);
+    @Query("SELECT COUNT(clientId) FROM clients where clientId is :cId")
+    Flowable<Integer> checkTransaction(Long cId);
 
     /**
      * Delete all users.
      */
-    @Query("DELETE FROM users")
+    @Query("DELETE FROM clients")
     void deleteAllUsers();
 }

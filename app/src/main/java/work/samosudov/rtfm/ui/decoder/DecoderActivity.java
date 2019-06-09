@@ -118,8 +118,7 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
     }
 
     private void parseTransaction(String text) {
-        tx = Tx.parseTx(text);
-        checkTransaction(tx.getId());
+        checkTransaction(text);
     }
 
     private void checkTransaction(String result) {
@@ -128,7 +127,17 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
 //        scan_qr.setEnabled(false);
         // Subscribe to updating the user name.
         // Re-enable the button once the user name has been updated
-        mDisposable.add(mViewModel.checkTransaction(result)
+        Long clientId = 0L;
+        try {
+            clientId = Long.parseLong(result);
+            Timber.d("checkTransaction clientId=%d", clientId);
+        } catch (NumberFormatException nfe) {
+            Timber.e("checkTransaction parseLong=%s", nfe.getMessage());
+        }
+
+//        if (clientId == 0L) return;
+
+        mDisposable.add(mViewModel.checkTransaction(clientId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((name) -> {

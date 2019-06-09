@@ -23,6 +23,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+import work.samosudov.rtfm.BuildConfig;
 import work.samosudov.rtfm.Injection;
 import work.samosudov.rtfm.R;
 import work.samosudov.rtfm.ui.decoder.DecoderActivity;
@@ -45,6 +47,8 @@ public class UserActivity extends AppCompatActivity {
 
     @BindView(R.id.start_work) Button start_work;
     @BindView(R.id.end_work) Button end_work;
+    @BindView(R.id.iv_sync)
+    ImageView iv_sync;
 
     private UserViewModelFactory mUserViewModelFactory;
 
@@ -62,6 +66,7 @@ public class UserActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this, mUserViewModelFactory).get(UserViewModel.class);
         start_work.setOnClickListener(v -> startSession());
         end_work.setOnClickListener(v -> setUser());
+        iv_sync.setOnClickListener(v -> getValidList());
     }
 
     @Override
@@ -84,10 +89,14 @@ public class UserActivity extends AppCompatActivity {
     }
 
     private void setUser() {
-//        mDisposable.add(mViewModel.insert("namenew")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(() -> Timber.d("setUser completed")));
+        mDisposable.add(mViewModel.insert(1L)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> Timber.d("setUser completed")));
+        mViewModel.checkProto();
+    }
+
+    private void getValidList() {
         mViewModel.checkProto();
     }
 

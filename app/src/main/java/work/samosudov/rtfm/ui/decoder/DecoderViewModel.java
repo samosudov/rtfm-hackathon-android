@@ -26,7 +26,9 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+import work.samosudov.rtfm.UserDataSource;
 import work.samosudov.rtfm.manager.CallCheckProto;
+import work.samosudov.rtfm.persistence.main.LocalUserDataSource;
 import work.samosudov.rtfm.persistence.txs.LocalTxsDataSource;
 import work.samosudov.rtfm.persistence.txs.Tx;
 import work.samosudov.rtfm.ui.main.UserActivity;
@@ -36,10 +38,10 @@ import work.samosudov.rtfm.ui.main.UserActivity;
  */
 public class DecoderViewModel extends ViewModel {
 
-    private final LocalTxsDataSource mDataSource;
+    private final LocalUserDataSource mDataSource;
     private final CompositeDisposable mDisposable = new CompositeDisposable();
 
-    public DecoderViewModel(LocalTxsDataSource dataSource) {
+    public DecoderViewModel(LocalUserDataSource dataSource) {
         mDataSource = dataSource;
     }
 
@@ -48,17 +50,17 @@ public class DecoderViewModel extends ViewModel {
      *
      * @return a {@link Flowable} that will emit every time the user name has been updated.
      */
-    public Flowable<String> getTxId() {
-        return mDataSource.getTx()
-                // for every emission of the user, get the user name
-                .map(tx -> tx.getId());
-    }
+//    public Flowable<String> getTxId() {
+//        return mDataSource.getTx()
+//                // for every emission of the user, get the user name
+//                .map(tx -> tx.getId());
+//    }
 
-    public Completable insert(final String id, final Double value, final Long time) {
-        return mDataSource.insertOrUpdateUser(new Tx(id, value, time));
-    }
+//    public Completable insert(final String id, final Double value, final Long time) {
+//        return mDataSource.insertOrUpdateUser(new Tx(id, value, time));
+//    }
 
-    public Flowable<Integer> checkTransaction(final String userName) {
+    public Flowable<Integer> checkTransaction(final Long userName) {
         return mDataSource.checkTransactions(userName)
                 .map(count -> {
                     Timber.d("checkTransaction %b", count);

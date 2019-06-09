@@ -40,7 +40,7 @@ public interface UserDataSource {
      */
     Completable insertOrUpdateUser(User user);
 
-    Flowable<Integer> checkTransactions(String stringId);
+    Flowable<Integer> checkTransactions(Long stringId);
 
     /**
      * Deletes all users from the data source.

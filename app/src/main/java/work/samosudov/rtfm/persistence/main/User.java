@@ -18,41 +18,30 @@ package work.samosudov.rtfm.persistence.main;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
-import java.util.UUID;
 
 /**
  * Immutable model class for a Tx
  */
-@Entity(tableName = "users")
+@Entity(tableName = "clients")
 public class User {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "userid")
-    private String mId;
+    @ColumnInfo(name = "clientId")
+    private Long clientId;
 
-    @ColumnInfo(name = "username")
-    private String mUserName;
-
-    @Ignore
-    public User(String userName) {
-        mId = UUID.randomUUID().toString();
-        mUserName = userName;
+    public User(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public User(String id, String userName) {
-        this.mId = id;
-        this.mUserName = userName;
+    @NonNull
+    public Long getClientId() {
+        return clientId;
     }
 
-    public String getId() {
-        return mId;
-    }
-
-    public String getUserName() {
-        return mUserName;
+    public void setClientId(@NonNull Long clientId) {
+        this.clientId = clientId;
     }
 }

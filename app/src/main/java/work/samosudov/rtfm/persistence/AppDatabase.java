@@ -32,7 +32,7 @@ import work.samosudov.rtfm.persistence.txs.TxDao;
 @Database(entities = {
         User.class,
         Tx.class
-}, version = 2)
+}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
