@@ -22,17 +22,11 @@ import androidx.lifecycle.ViewModel;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import timber.log.Timber;
 import work.samosudov.rtfm.UserDataSource;
 import work.samosudov.rtfm.manager.CallCheckProto;
-import work.samosudov.rtfm.manager.ServerManager;
 import work.samosudov.rtfm.persistence.main.User;
 
 /**
@@ -77,13 +71,13 @@ public class UserViewModel extends ViewModel {
     }
 
     public void checkProto() {
-//        mDisposable.add(Observable
-//                .fromCallable(new CallCheckProto())
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(
-//                        (b) -> Timber.d("transaction true"),
-//                        e-> Timber.e("err =%s", e.getMessage())
-//                ));
+        mDisposable.add(Observable
+                .fromCallable(new CallCheckProto())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        (b) -> Timber.d("checkProto true"),
+                        e-> Timber.e("err =%s", e.getMessage())
+                ));
 //        mDisposable.add(ServerManager
 //                .protoApi()
 //                .estimatedObs()
@@ -95,17 +89,30 @@ public class UserViewModel extends ViewModel {
 //                )
 //        );
 
-        ServerManager.protoApi().estimatedObs().enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Timber.d("protoApirest %s", response);
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Timber.d("protoApierr t=%s", t.getMessage());
-            }
-        });
+//        ServerManager.protoApi().validList().enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+//                Timber.d("validList %s", response);
+//                if (!response.isSuccessful()) return;
+////                OtherModels.ClientValidationList validList;
+//                try {
+//                    byte[] bytes = response.body().bytes();
+////                    validList = OtherModels.ClientValidationList.parseFrom(bytes);
+////                    Timber.d("getClientsCount=%d", validList.getClientsCount());
+//                    Timber.d("getClientsCount=%d", Arrays.toString(bytes));
+//                } catch (IOException ioe) {
+//                    Timber.e("validList ioe=%s", ioe.getMessage());
+//                    ioe.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Timber.d("validList t=%s", t.getMessage());
+//            }
+//        });
     }
 
     @Override

@@ -5,7 +5,8 @@ buildscript {
     addRepos(repositories)
     dependencies {
         classpath deps.android_gradle_plugin
-        classpath deps.protobuf_gradle_plugin
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
+//        classpath deps.protobuf_gradle_plugin
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

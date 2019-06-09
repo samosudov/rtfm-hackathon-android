@@ -134,17 +134,19 @@ public class DecoderActivity extends AppCompatActivity implements ActivityCompat
                     } else {
                         showWrongPushSave();
                     }
-                }));
+                }, e -> Timber.e("checkTransaction=%e", e.getMessage())));
     }
 
     private void showSuccessPushSave() {
         showFragment(SUCCESS_RESULT);
-        pushToServerOrSave();
+        //FIXME:
+//        pushToServerOrSave();
     }
 
     private void showWrongPushSave() {
         showFragment(WRONG_RESULT);
-        pushToServerOrSave();
+        //FIXME:
+//        pushToServerOrSave();
     }
 
     private void pushToServerOrSave() {

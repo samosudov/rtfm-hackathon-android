@@ -83,6 +83,9 @@ public class ScanResultFragment extends DialogFragment {
         if (resInt == SUCCESS_RESULT) {
             tv_title.setText("Платеж совершен");
             tv_explain.setText("Операция выполнена");
+
+            mDisposable.add(Completable.timer(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                    .subscribe(this::dismiss));
         } else if (resInt == WRONG_RESULT) {
             ds = ResourcesCompat.getDrawable(getResources(),
                     R.drawable.wrong_icon, null);
@@ -91,9 +94,6 @@ public class ScanResultFragment extends DialogFragment {
         }
         iv_show_qr.setImageDrawable(ds);
 
-
-        mDisposable.add(Completable.timer(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(this::dismiss));
 
     }
 

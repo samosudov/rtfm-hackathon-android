@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'  // or 'com.android.library'
 apply plugin: 'com.google.protobuf'
 
 android {
@@ -19,6 +19,18 @@ android {
         }
     }
 
+    sourceSets{
+        main.java.srcDirs += "${protobuf.generatedFilesBaseDir}/main/javalite"
+    }
+
+//    // Adding generated proto to srcDirs depending on build variant
+//    variantFilter { variant ->
+//        def sourceSet = android.sourceSets.findByName(variant.buildType.name)
+//        if (sourceSet != null) {
+//            sourceSet.java.srcDirs += "build/generated/source/proto/${variant.name}/javalite"
+//        }
+//    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -26,31 +38,62 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
     }
 }
 
 protobuf {
-    protoc { artifact = 'com.google.protobuf:protoc:3.6.1' }
+    protoc {
+        // You still need protoc like in the non-Android case
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
     plugins {
-        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.18.0'
+        javalite {
+            // The codegen for lite comes as a separate artifact
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
         }
     }
     generateProtoTasks {
         all().each { task ->
+            task.builtins {
+                // In most cases you don't need the full Java output
+                // if you use the lite output.
+                remove java
+            }
             task.plugins {
-                javalite {}
-                grpc { // Options added to --grpc_out
-                    option 'lite'
-                }
+                javalite { }
             }
         }
     }
 }
+
+//protobuf {
+//    protoc { artifact = 'com.google.protobuf:protoc:3.6.1' }
+//    plugins {
+//        javalite { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+//        grpc {
+//            artifact = 'io.grpc:protoc-gen-grpc-java:1.18.0'
+//        }
+//    }
+//    generateProtoTasks {
+//        all().each { task ->
+//            task.plugins {
+//                javalite {}
+//                grpc { // Options added to --grpc_out
+//                    option 'lite'
+//                }
+//            }
+//        }
+//    }
+//}
+
 
 dependencies {
     // Support libraries
@@ -60,6 +103,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     // Architecture components
     implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.extensions
     implementation deps.lifecycle.extensions
     annotationProcessor deps.lifecycle.compiler
     implementation deps.room.runtime
@@ -76,14 +120,20 @@ dependencies {
 
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
-    implementation deps.retrofit.proto
+//    implementation deps.retrofit.proto
     implementation deps.okhttp_logging_interceptor
     implementation deps.glide.runtime
 
-    implementation deps.grpc.okhttp
+    implementation ("com.squareup.retrofit2:converter-protobuf:2.3.0")
+//    implementation ("com.squareup.retrofit2:converter-protobuf:2.3.0") {
+//        exclude group: 'protobuf', module: 'protobuf-java'
+//    }
+
+//    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+//    implementation deps.grpc.okhttp
 //    implementation deps.grpc.lite
-    implementation deps.grpc.stub
-    implementation deps.javax
+//    implementation deps.grpc.stub
+//    implementation deps.javax
 
     implementation deps.butterknife.core
     annotationProcessor deps.butterknife.compiler

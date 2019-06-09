@@ -32,7 +32,7 @@ import work.samosudov.rtfm.persistence.txs.TxDao;
 @Database(entities = {
         User.class,
         Tx.class
-}, version = 1)
+}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
@@ -45,7 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "Sample.db")
+                            AppDatabase.class, "Sample.db").fallbackToDestructiveMigration()
                             .build();
                 }
             }

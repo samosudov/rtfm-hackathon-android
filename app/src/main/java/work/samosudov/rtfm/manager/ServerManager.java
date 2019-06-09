@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 public class ServerManager {
 
-    private final static String BASE_URL = "http://ec2-3-82-45-111.compute-1.amazonaws.com:8080/api/";
+    private final static String BASE_URL = "http://ec2-3-82-45-111.compute-1.amazonaws.com:80/api/";
 //    private final static int port = 7878;
 //    private ManagedChannel channel = null;
 //
@@ -46,6 +46,7 @@ public class ServerManager {
 
     //endpoints
     private final static String RECENT_PAYMENTS = "recent_payments";
+    private final static String VALID_LIST = "valid_list";
 
     //Heroku prod
     public static ProtoManager protoApi() {
@@ -82,6 +83,8 @@ public class ServerManager {
 
     public interface ProtoManager {
 
+        @GET(VALID_LIST)
+        Call<ResponseBody> validList();
         @GET(RECENT_PAYMENTS)
         Call<ResponseBody> estimatedObs();
 //        @POST(RECENT_PAYMENTS)
