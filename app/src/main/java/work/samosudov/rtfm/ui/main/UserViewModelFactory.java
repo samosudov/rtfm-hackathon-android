@@ -19,17 +19,16 @@ package work.samosudov.rtfm.ui.main;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import work.samosudov.rtfm.UserDataSource;
-import work.samosudov.rtfm.ui.main.UserViewModel;
+import work.samosudov.rtfm.persistence.main.LocalUserDataSource;
 
 /**
  * Factory for ViewModels
  */
 public class UserViewModelFactory implements ViewModelProvider.Factory {
 
-    private final UserDataSource mDataSource;
+    private final LocalUserDataSource mDataSource;
 
-    public UserViewModelFactory(UserDataSource dataSource) {
+    public UserViewModelFactory(LocalUserDataSource dataSource) {
         mDataSource = dataSource;
     }
 

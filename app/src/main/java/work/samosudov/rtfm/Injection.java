@@ -29,13 +29,13 @@ import work.samosudov.rtfm.ui.main.UserViewModelFactory;
  */
 public class Injection {
 
-    public static UserDataSource provideUserDataSource(Context context) {
+    public static LocalUserDataSource provideUserDataSource(Context context) {
         AppDatabase database = AppDatabase.getInstance(context);
         return new LocalUserDataSource(database.userDao());
     }
 
     public static UserViewModelFactory provideViewModelFactory(Context context) {
-        UserDataSource dataSource = provideUserDataSource(context);
+        LocalUserDataSource dataSource = provideUserDataSource(context);
         return new UserViewModelFactory(dataSource);
     }
 
