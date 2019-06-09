@@ -7,6 +7,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
+import work.samosudov.rtfm.generated.OtherModels;
 
 public class CallCheckProto implements Callable<Boolean> {
 
@@ -19,8 +20,8 @@ public class CallCheckProto implements Callable<Boolean> {
             Response<ResponseBody> response = call.execute();
             Timber.d("call=%s", response);
 //            ResponseBody rb = response.body().bytes();
-//            OtherModels.ClientValidationList v = OtherModels.ClientValidationList.parseFrom(response.body().bytes());
-
+            OtherModels.ClientValidationList list = OtherModels.ClientValidationList.parseFrom(response.body().bytes());
+            Timber.d("list size=%d", list.getClientsCount());
         } catch (IOException ioe) {
             ioe.printStackTrace();
             Timber.e("call ");
